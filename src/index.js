@@ -38,36 +38,57 @@ class Project{
 
     addTask(task){
         this.projects.push(task);
+        this.savetoLocalStorage();
     }
 
     getProject(){
-        console.log(this.projectTitle);
-        console.log(this.projects);
-        return this.projects;
+        console.log(JSON.parse(localStorage.getItem(this.projectTitle)));
+    }
+
+    savetoLocalStorage(){
+        localStorage.setItem(this.projectTitle,JSON.stringify(this.projects));
     }
 
 }
 
-//project 1
-const project = new Project('Kim Collection')
 
-const task1 = new Task('Assignment','Soen 308','20th Feb',false,false)
-const task2 = new Task('Ministry','Rivet','20th APril',false,false)
+const project = new Project('Kim Collection');
+const task = new Task('Daily Assignment','Every Unit','24/1/2024',false,true);
+task.addcheckList('Soen 303')
+task.addcheckList('Soen 330')
+task.addcheckList('Soen 495')
 
-project.addTask(task1.getTaskDetails());
-project.addTask(task2.getTaskDetails())
+const task2 = new Task('Shop','Groccery','24/1/2024',false,true);
+task2.addcheckList('Nyanya')
+task2.addcheckList('Vitunguu')
+task2.addcheckList('Sukuma')
+
+const task3 = new Task('Ministry','rivet','24/1/2024',false,true);
+task3.addcheckList('GetTogether')
+task3.addcheckList('Evangelism Training')
+task3.addcheckList('Combined ET')
+
+
+project.addTask(task.getTaskDetails());
+project.addTask(task2.getTaskDetails());
+project.addTask(task3.getTaskDetails());
+
+
+const project2 = new Project('Future Preview')
+const task4 = new Task('Finish Odin','70 units remaining','1/4/2024',true,false)
+task4.addcheckList('To do app')
+task4.addcheckList('Simple Portfolio')
+task4.addcheckList('HouseRades')
+
+const task5 = new Task('Finish Odin','70 units remaining','1/4/2024',true,false)
+task5.addcheckList('To do app')
+task5.addcheckList('Simple Portfolio')
+task5.addcheckList('HouseRades')
+
+project2.addTask(task4);
+project2.addTask(task5);
+
 
 project.getProject();
-
-//project 2
-const project2 = new Project('Shopping List')
-
-const task3 = new Task('grocery','buget ni rwabe','2nd Jan 2024',false,true)
-task3.addcheckList('Kitunguu')
-task3.addcheckList('Nyanya')
-task3.addcheckList('Cabbage')
-
-project2.addTask(task3.getTaskDetails())
-
 project2.getProject();
 
