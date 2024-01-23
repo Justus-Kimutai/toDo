@@ -1,11 +1,10 @@
 class Task{
-
-    constructor(title,description,duedate,prioritize,complete){
+    complete = false;
+    constructor(title,description,duedate,prioritize){
         this.taskTitle = title
         this.description = description
         this.duedate = duedate
         this.prioritize = prioritize
-        this.complete = complete
     }
 
     checkList = []
@@ -26,6 +25,7 @@ class Task{
     }
 
 }
+
 
 
 class Project{
@@ -49,21 +49,34 @@ class Project{
         localStorage.setItem(this.projectTitle,JSON.stringify(this.projects));
     }
 
+    dropTask(taskTitle){
+        for(let i=0;i<this.projects.length;i++){
+                let task = this.projects[i];
+
+                if(task.title === taskTitle){
+                    task.complete = true;
+                    this.projects.splice(i,1);
+                    this.savetoLocalStorage();
+                    break;
+                }
+        }
+    }
+
 }
 
 
 const project = new Project('Kim Collection');
-const task = new Task('Daily Assignment','Every Unit','24/1/2024',false,true);
+const task = new Task('Daily Assignment','Every Unit','24/1/2024',false);
 task.addcheckList('Soen 303')
 task.addcheckList('Soen 330')
 task.addcheckList('Soen 495')
 
-const task2 = new Task('Shop','Groccery','24/1/2024',false,true);
+const task2 = new Task('Shop','Groccery','24/1/2024',false);
 task2.addcheckList('Nyanya')
 task2.addcheckList('Vitunguu')
 task2.addcheckList('Sukuma')
 
-const task3 = new Task('Ministry','rivet','24/1/2024',false,true);
+const task3 = new Task('Ministry','rivet','24/1/2024',false);
 task3.addcheckList('GetTogether')
 task3.addcheckList('Evangelism Training')
 task3.addcheckList('Combined ET')
@@ -73,22 +86,10 @@ project.addTask(task.getTaskDetails());
 project.addTask(task2.getTaskDetails());
 project.addTask(task3.getTaskDetails());
 
-
-const project2 = new Project('Future Preview')
-const task4 = new Task('Finish Odin','70 units remaining','1/4/2024',true,false)
-task4.addcheckList('To do app')
-task4.addcheckList('Simple Portfolio')
-task4.addcheckList('HouseRades')
-
-const task5 = new Task('Finish Odin','70 units remaining','1/4/2024',true,false)
-task5.addcheckList('To do app')
-task5.addcheckList('Simple Portfolio')
-task5.addcheckList('HouseRades')
-
-project2.addTask(task4);
-project2.addTask(task5);
+// project.dropTask('Ministry')
+// project.dropTask('Shop')
+// project.dropTask('Daily Assignment')
 
 
 project.getProject();
-project2.getProject();
 
