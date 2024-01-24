@@ -1,10 +1,10 @@
 class Task{
     complete = false;
-    constructor(title,description,duedate,prioritize){
+    prioritize = false;
+    constructor(title,description,duedate){
         this.taskTitle = title
         this.description = description
         this.duedate = duedate
-        this.prioritize = prioritize
     }
 
     checkList = []
@@ -20,12 +20,12 @@ class Task{
             duedate: this.duedate,
             prioritize: this.prioritize,
             complete: this.complete,
-            checkList: this.checkList
+            checkList: this.checkList,
+            prioritize: this.prioritize
         };
     }
 
 }
-
 
 
 class Project{
@@ -42,7 +42,13 @@ class Project{
     }
 
     getProject(){
-        console.log(JSON.parse(localStorage.getItem(this.projectTitle)));
+        if(localStorage.length){
+            console.log(JSON.parse(localStorage.getItem(this.projectTitle)));
+            console.log(localStorage.length);
+        }else{
+            console.log('No item');
+        }
+     
     }
 
     savetoLocalStorage(){
@@ -62,21 +68,33 @@ class Project{
         }
     }
 
+    changeTaskPrioriry(taskTitle){
+        for(let i=0;i<this.projects.length;i++){
+            let task = this.projects[i];
+
+            if(task.title === taskTitle){
+                task.prioritize = task.prioritize ? false : true;
+                this.savetoLocalStorage();
+                break;
+            }
+        }
+    }
+
 }
 
 
 const project = new Project('Kim Collection');
-const task = new Task('Daily Assignment','Every Unit','24/1/2024',false);
+const task = new Task('Daily Assignment','Every Unit','24/1/2024');
 task.addcheckList('Soen 303')
 task.addcheckList('Soen 330')
 task.addcheckList('Soen 495')
 
-const task2 = new Task('Shop','Groccery','24/1/2024',false);
+const task2 = new Task('Shop','Groccery','24/1/2024');
 task2.addcheckList('Nyanya')
 task2.addcheckList('Vitunguu')
 task2.addcheckList('Sukuma')
 
-const task3 = new Task('Ministry','rivet','24/1/2024',false);
+const task3 = new Task('Ministry','rivet','24/1/2024');
 task3.addcheckList('GetTogether')
 task3.addcheckList('Evangelism Training')
 task3.addcheckList('Combined ET')
@@ -86,10 +104,7 @@ project.addTask(task.getTaskDetails());
 project.addTask(task2.getTaskDetails());
 project.addTask(task3.getTaskDetails());
 
-// project.dropTask('Ministry')
-// project.dropTask('Shop')
-// project.dropTask('Daily Assignment')
-
+project.changeTaskPrioriry('Ministry');
 
 project.getProject();
 
