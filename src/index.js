@@ -1,3 +1,7 @@
+import {renderContent,CreateProjectDiv,AddProjectDiv } from './landing';
+import {MainTask,TaskContainer} from './task'
+import './style.css';
+
 class Task{
     complete = false;
     prioritize = false;
@@ -83,28 +87,59 @@ class Project{
 }
 
 
-const project = new Project('Kim Collection');
-const task = new Task('Daily Assignment','Every Unit','24/1/2024');
-task.addcheckList('Soen 303')
-task.addcheckList('Soen 330')
-task.addcheckList('Soen 495')
+class AddProject extends Project{
 
-const task2 = new Task('Shop','Groccery','24/1/2024');
-task2.addcheckList('Nyanya')
-task2.addcheckList('Vitunguu')
-task2.addcheckList('Sukuma')
+    constructor(title){
+        super(title)
+    }
+    
+    createNewTask(taskTitle,taskDescription,dueDate){
+        const newTask = new Task(taskTitle,taskDescription,dueDate);
+        this.addTask(newTask)
+    }
 
-const task3 = new Task('Ministry','rivet','24/1/2024');
-task3.addcheckList('GetTogether')
-task3.addcheckList('Evangelism Training')
-task3.addcheckList('Combined ET')
+}
 
 
-project.addTask(task.getTaskDetails());
-project.addTask(task2.getTaskDetails());
-project.addTask(task3.getTaskDetails());
 
-project.changeTaskPrioriry('Ministry');
 
-project.getProject();
+renderContent()
+
+const newProject = new AddProject('Work')
+newProject.createNewTask('Coding','Finish the web','24/2/2024')
+newProject.createNewTask('Washing','weekend','5/2/2024')
+
+const newProject2 = new AddProject('WorkOuts')
+newProject2.createNewTask('Cardio','6a.m.','everyday')
+
+const newProject3 = new AddProject('Assignment')
+newProject3.createNewTask('soen 308','before march','29/2/2024')
+newProject3.createNewTask('soen 334','From 8-12','12/2/2024')
+
+
+
+
+function PopulateProjectContainer() {
+
+    const projectContainer = document.querySelector('.projects-container')
+    
+
+    //grab all elements from the local storage
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        projectContainer.appendChild(CreateProjectDiv(key))
+
+    }
+
+    //Add project div with plus sign
+    projectContainer.appendChild(AddProjectDiv())
+}
+
+PopulateProjectContainer()
+
+
+
+
+
 
