@@ -45,6 +45,8 @@ class Project{
         this.savetoLocalStorage();
     }
 
+
+
     getProject(){
         if(localStorage.length){
             console.log(JSON.parse(localStorage.getItem(this.projectTitle)));
@@ -87,11 +89,12 @@ class Project{
 }
 
 
-class AddProject extends Project{
+export class AddProject extends Project{
 
     constructor(title){
         super(title)
     }
+
     
     createNewTask(taskTitle,taskDescription,dueDate){
         const newTask = new Task(taskTitle,taskDescription,dueDate);
@@ -100,36 +103,17 @@ class AddProject extends Project{
 
 }
 
-
-
-
 renderContent()
-
-const newProject = new AddProject('Work')
-newProject.createNewTask('Coding','Finish the web','24/2/2024')
-newProject.createNewTask('Washing','weekend','5/2/2024')
-
-const newProject2 = new AddProject('WorkOuts')
-newProject2.createNewTask('Cardio','6a.m.','everyday')
-
-const newProject3 = new AddProject('Assignment')
-newProject3.createNewTask('soen 308','before march','29/2/2024')
-newProject3.createNewTask('soen 334','From 8-12','12/2/2024')
-
-
 
 
 function PopulateProjectContainer() {
-
     const projectContainer = document.querySelector('.projects-container')
     
-
     //grab all elements from the local storage
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         const value = localStorage.getItem(key);
         projectContainer.appendChild(CreateProjectDiv(key))
-
     }
 
     //Add project div with plus sign
@@ -139,7 +123,24 @@ function PopulateProjectContainer() {
 PopulateProjectContainer()
 
 
+export function createNewTaskFrom(projectTitle,taskTitle,taskDescription,dueDate){
+    
+    if(taskTitle){
+        const captainKim = localStorage.getItem(projectTitle)
+        console.log(captainKim);
+        const newTask = new Task(taskTitle,taskDescription,dueDate)
 
+        let retrievedTask = JSON.parse(captainKim)
+        retrievedTask.push(newTask);
+        console.log(retrievedTask);
+
+        localStorage.setItem(projectTitle,JSON.stringify(retrievedTask))
+
+    }else{
+        projectTitle = new AddProject(projectTitle)
+        projectTitle.createNewTask('sample task title','sample task description','sample due date')
+    }
+}
 
 
 

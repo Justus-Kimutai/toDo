@@ -17,15 +17,32 @@ body{
     text-align: center;
     padding: .01em;
     margin: 0;
+    padding: 0 5em;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
+.fa-house{
+    font-size: 1.5rem;
+}
+.fa-house:hover,
+.fa-house:focus{
+    cursor: pointer;
+}
+.page-title--text{
+    display: inline-block;
+}
+
+
 .project-title--text{
-    font-weight: 900;
+    font-weight: 500;
 }
 .projects-container{
     height: 85vh;
     background: #00000075;
     margin: 0;
-    padding: 1.9em;
+    padding: 1em 1.9em;
     overflow-y: auto;
 
     display: grid;
@@ -140,6 +157,9 @@ body{
 .drop-down--caret{
     margin-left: 30px;
 }
+.drop-down--caret--rotated{
+    transform: rotate(180deg);
+}
 .drop-down--caret:hover,
 .drop-down--caret:focus{
     cursor: pointer;
@@ -178,6 +198,9 @@ body{
 .sub-details{
     margin-left: 40px;
     display: none;
+}
+.sub-details--displayBlock{
+    display: block;
 }
 .task-description{
     padding: 0 2em;
@@ -247,6 +270,7 @@ body{
 }
 .task-title--form,
 .project-title--form{
+    z-index: 10;
     color: black;
     background: #FFFDE6;
     position: absolute;
@@ -276,6 +300,7 @@ body{
 }
 
 #task-title-input,
+#task-description-input,
 #project-title--input{
     width: 85%;
     display: block;
@@ -301,14 +326,16 @@ body{
     height: 50px;
     background: #E0DEC9;
 }
-.add-new--task---btn{
+.add-new--task---btn,
+.edit-task--btn{
     background: #FF8A00;
     padding: .3em 3em;
     border-radius: 5px;
     margin-left: 20px;
     font-weight: 500;
 }
-.add-new--task---btn:hover{
+.add-new--task---btn:hover,
+.edit-task--btn:hover{
     cursor: pointer;
 }
 .add-task:hover,

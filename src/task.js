@@ -1,14 +1,30 @@
+import { PopulateProjectContainer, createNewTaskFrom } from '.'
 import myImage from './addbtn.png'
+import { AddProjectDiv, CreateProjectDiv, Main, PageTitle } from './landing'
 
-function PageTitle(){
+export function PageTitleTask(){
     const projectTitle = document.createElement('div')
     projectTitle.classList.add('page-title')
+
+    const homeBtn = document.createElement('i')
+    homeBtn.classList.add('fa-solid')
+    homeBtn.classList.add('fa-house')
+
+    const userName = document.createElement('span')
+    userName.classList.add('user-name')
+    userName.textContent = '@ebenezer'
+
+    homeBtn.addEventListener('click',()=>{
+            location.reload(true);
+    })
 
     const projectTitleText = document.createElement('h1')
     projectTitleText.classList.add('page-title--text')
     projectTitleText.textContent = 'TO DO LIST'
-
+    
+    projectTitle.appendChild(homeBtn)
     projectTitle.appendChild(projectTitleText)
+    projectTitle.appendChild(userName)
 
     return projectTitle 
 }
@@ -16,11 +32,16 @@ function PageTitle(){
 export function MainTask(){
     const main = document.createElement('div')
     main.classList.add('main')
+
     const insideTheProject = document.createElement('div')
-    
     insideTheProject.classList.add('container')
     insideTheProject.classList.add('inside-the--Project')
 
+    const taskDiv = document.createElement('div')
+    taskDiv.classList.add('task-div--container')
+    
+
+    insideTheProject.appendChild(taskDiv)
     insideTheProject.appendChild(TaskTitleForm())
     insideTheProject.appendChild(AddTaskBtn())
 
@@ -32,7 +53,7 @@ export function MainTask(){
 export function ProjectTitle(projectTitleUserInput){
     const projectTitle = document.createElement('div')
     projectTitle.classList.add('project-title')
-    const projectTitleText = document.createElement('h1')
+    const projectTitleText = document.createElement('h3')
     projectTitleText.classList.add('project-title--text')
     projectTitleText.textContent = projectTitleUserInput
 
@@ -69,6 +90,38 @@ function flex(taskTitleinput,dueDateinput){
     faCaretDown.classList.add('fa-caret-down')
     faCaretDown.classList.add('drop-down--caret')
 
+    faCaretDown.addEventListener('click',(event)=>{
+        let target = event.target
+
+        let currentSubtask = target.parentElement.parentElement.parentElement.lastElementChild
+        
+        currentSubtask.classList.toggle('sub-details--displayBlock')
+        target.classList.toggle('drop-down--caret--rotated')
+
+        let currentTitle = target.parentElement.parentElement.parentElement.parentElement.parentElement.firstChild.firstChild.textContent
+        let currentTaskTitle = target.parentElement.firstChild.textContent
+        let currentnavListUL = target.parentElement.parentElement.parentElement.children[1].children[1]
+        let tasksFromTheLocalStorage = JSON.parse(localStorage.getItem(currentTitle))
+
+        for(let i=0;i<tasksFromTheLocalStorage.length;i++){
+            if(tasksFromTheLocalStorage[i].taskTitle === currentTaskTitle){
+                currentnavListUL.textContent = ""
+                
+                for(let j=0;j<tasksFromTheLocalStorage[i].checkList.length;j++){
+                    const subTaskItem = document.createElement('li')
+                    subTaskItem.classList.add('subtask-item')
+                    subTaskItem.textContent = tasksFromTheLocalStorage[i].checkList[j]
+
+                    console.log(subTaskItem);
+
+                    currentnavListUL.appendChild(subTaskItem)
+                }
+
+            }
+        }
+        
+    })
+
 
     const flexItemDateDiv = document.createElement('div')
     flexItemDateDiv.classList.add('flex-item--date---div')
@@ -80,6 +133,52 @@ function flex(taskTitleinput,dueDateinput){
     const faPen = document.createElement('i')
     faPen.classList.add('fa-solid')
     faPen.classList.add('fa-pen')
+    faPen.addEventListener('click',(e)=>{
+        const inputForm = document.querySelector('.task-title--form')
+        const title = document.getElementById('task-title-input')
+        const description = document.getElementById('task-description-input')
+        const dueDate = document.getElementById('myDate')
+
+        // title.value = "Mine"
+        // description.value = "desc"
+        // dueDate.value ="12/9/2024"
+
+        
+        let target = e.target
+        let currentTitle = target.parentElement.parentElement.parentElement.parentElement.parentElement.firstChild.firstChild.textContent
+        let currentTaskTitle = target.parentElement.parentElement.firstChild.firstChild.textContent
+        let tasksFromTheLocalStorage = JSON.parse(localStorage.getItem(currentTitle))
+
+        // // console.log(tasksFromTheLocalStorage);
+        // console.log(currentTitle);
+        // console.log(currentTaskTitle);
+
+        for(let i=0;i<tasksFromTheLocalStorage.length;i++){
+            if(tasksFromTheLocalStorage[i].taskTitle === currentTaskTitle){
+                title.value = tasksFromTheLocalStorage[i].taskTitle
+                description.value = tasksFromTheLocalStorage[i].description
+                dueDate.value = tasksFromTheLocalStorage[i].dueDate
+                inputForm.style.display = 'block'
+                break;
+            }
+        }
+
+        //submission
+        
+        const addTaskBtn = document.querySelector('.task-title--form')
+        const submitBtn = document.createElement('span')
+        submitBtn.classList.add('edit-task--btn')
+        submitBtn.textContent = "Confirm"
+        console.log(addTaskBtn);
+        addTaskBtn.replaceChild(submitBtn, document.querySelector('.add-new--task---btn'));
+
+        submitBtn.addEventListener('click',()=>{
+            
+        })
+
+
+    })
+
 
     const faTrashCan = document.createElement('i')
     faTrashCan.classList.add('fa-sharp')
@@ -104,8 +203,10 @@ function flex(taskTitleinput,dueDateinput){
 }
 
 function SubDetails(taskDescriptioninput){
+    let count = 0
     const subDetails = document.createElement('div')
     subDetails.classList.add('sub-details')
+
 
     const TaskDescription = document.createElement('div')
     TaskDescription.classList.add('task-description')
@@ -121,6 +222,7 @@ function SubTaskDetails(){
     const subTaskDetails = document.createElement('ul')
     subTaskDetails.classList.add('sub-task--details')
 
+    
     const subTaskItem = document.createElement('li')
     subTaskItem.classList.add('subtask-item')
     subTaskItem.textContent = 'sub-title--one'
@@ -134,13 +236,6 @@ function AddTaskDiv(){
     const addTaskDiv = document.createElement('div')
     addTaskDiv.classList.add('add-task--div')
 
-    const DropDownCaret = document.createElement('span')
-    DropDownCaret.classList.add('drop-up--caret')
-
-    const FaCaretUp = document.createElement('i')
-    FaCaretUp.classList.add('fa-solid')
-    FaCaretUp.classList.add('fa-caret-up')
-
     const AddTaskInput = document.createElement('input')
     AddTaskInput.classList.add('add-task--input')
     AddTaskInput.placeholder = 'Add a sub-task'
@@ -152,17 +247,65 @@ function AddTaskDiv(){
     FaArrowUp.classList.add('fa-solid')
     FaArrowUp.classList.add('fa-arrow-up')
 
+    FaArrowUp.addEventListener('click',(event)=>{
 
-    DropDownCaret.appendChild(FaCaretUp)
+        let target = event.target
+
+        let currentInput = target.parentElement.parentElement.firstChild
+         
+        if(currentInput.value === "") {
+            alert('cant be empty')
+            return
+        }
+        let currentTaskTitle = target.parentElement.parentElement.parentElement.parentElement.firstChild.firstChild.textContent
+        let currentProjectTitle = target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.firstChild.firstChild.textContent
+
+        let tasksFromLocalStorage = JSON.parse(localStorage.getItem(currentProjectTitle))
+
+        for (let i = 0; i < tasksFromLocalStorage.length; i++) {
+            const element = tasksFromLocalStorage[i];
+
+            if(element.taskTitle === currentTaskTitle){
+                
+                element.checkList.push(currentInput.value)
+
+                break;
+            }
+        }
+        currentInput.value = ""
+        localStorage.setItem(currentProjectTitle,JSON.stringify(tasksFromLocalStorage))
+
+
+        //populate now the sublist
+        let currentsubTaskUlConainer = target.parentElement.parentElement.parentElement.children[1]
+
+        const currentTaskItem = JSON.parse(localStorage.getItem(currentProjectTitle))
+
+        for (let i = 0; i < currentTaskItem.length; i++) {
+
+            if(currentTaskTitle === currentTaskItem[i].taskTitle){
+                const element = currentTaskItem[i].checkList
+                const subTaskItem = document.createElement('li')
+                subTaskItem.classList.add('subtask-item')
+                subTaskItem.textContent = element[element.length-1]
+
+                currentsubTaskUlConainer.appendChild(subTaskItem)
+
+                
+            }
+
+        }
+        // console.log(currentTaskItem);
+    })
+
+
     addBtn.appendChild(FaArrowUp)
 
-    addTaskDiv.appendChild(DropDownCaret)
     addTaskDiv.appendChild(AddTaskInput)
     addTaskDiv.appendChild(addBtn)
 
     return addTaskDiv
 }
-
 
 
 function TaskTitleForm(){
@@ -181,11 +324,11 @@ function TaskTitleForm(){
 
     
     const taskLabel2 = document.createElement('label')
-    taskLabel2.textContent = 'Descripption'
+    taskLabel2.textContent = 'Description'
 
     const taskInput2 = document.createElement('input')
     taskInput2.type = 'text'
-    taskInput2.id = 'task-title-input'
+    taskInput2.id = 'task-description-input'
 
 
     const taskLabel3 = document.createElement('label')
@@ -200,6 +343,73 @@ function TaskTitleForm(){
     addNewTaskBtn.classList.add('add-new--task---btn')
     addNewTaskBtn.textContent = 'Let\'s go!'
 
+    addNewTaskBtn.addEventListener('click',
+        // const taskTitleInputValue = document.getElementById('task-title-input')
+        // const taskDescriptionInputValue = document.getElementById('task-description-input')
+        // const taskDateInputValue = document.getElementById('myDate')
+
+        // if(taskTitleInputValue.value === ""
+        //     || taskDescriptionInputValue.value === ""
+        //     || taskDateInputValue.value === ""){
+        //         alert('cannot be empty')
+        //     } 
+        // else{
+        //     const currentprojectTitle = document.querySelector('.add-new--task---btn').parentElement.parentElement.firstChild.textContent.toLowerCase()
+        //     console.log(currentprojectTitle);
+        //     createNewTaskFrom(currentprojectTitle,taskTitleInputValue.value,taskDescriptionInputValue.value,taskDateInputValue.value)
+
+
+        //     const projectFromLocalStorage = localStorage.getItem(currentprojectTitle)
+
+        //     const insideTheProject = document.querySelector('.task-div--container')
+        //     let taskContent = JSON.parse(projectFromLocalStorage)[JSON.parse(projectFromLocalStorage).length-1]
+    
+        //     insideTheProject.appendChild(TaskContainer(taskContent.taskTitle,taskContent.duedate,taskContent.description))
+        
+
+        //     taskTitleInputValue.value = ""
+        //     taskDescriptionInputValue.value = ""
+        //     taskDateInputValue.value = ""
+
+        //     taskTitleForm.style.display = 'none'
+
+        // }
+        addNewTaskBTNEvent
+    )
+
+
+    function addNewTaskBTNEvent(){
+        const taskTitleInputValue = document.getElementById('task-title-input')
+        const taskDescriptionInputValue = document.getElementById('task-description-input')
+        const taskDateInputValue = document.getElementById('myDate')
+
+        if(taskTitleInputValue.value === ""
+            || taskDescriptionInputValue.value === ""
+            || taskDateInputValue.value === ""){
+                alert('cannot be empty')
+            } 
+        else{
+            const currentprojectTitle = document.querySelector('.add-new--task---btn').parentElement.parentElement.firstChild.textContent.toLowerCase()
+            console.log(currentprojectTitle);
+            createNewTaskFrom(currentprojectTitle,taskTitleInputValue.value,taskDescriptionInputValue.value,taskDateInputValue.value)
+
+
+            const projectFromLocalStorage = localStorage.getItem(currentprojectTitle)
+
+            const insideTheProject = document.querySelector('.task-div--container')
+            let taskContent = JSON.parse(projectFromLocalStorage)[JSON.parse(projectFromLocalStorage).length-1]
+    
+            insideTheProject.appendChild(TaskContainer(taskContent.taskTitle,taskContent.duedate,taskContent.description))
+        
+
+            taskTitleInputValue.value = ""
+            taskDescriptionInputValue.value = ""
+            taskDateInputValue.value = ""
+
+            taskTitleForm.style.display = 'none'
+
+        }
+    }
 
     taskTitleForm.appendChild(coolHeader)
     taskTitleForm.appendChild(taskLabel)
@@ -222,8 +432,14 @@ function AddTaskBtn(){
 
     addTaskBtn.appendChild(addBtnImg)
 
+    addTaskBtn.addEventListener('click',()=>{
+        const taskTitleForm = document.querySelector('.task-title--form')
+        taskTitleForm.style.display = 'block'
+    })
+
     return addTaskBtn
 }
+
 
 function Footer(){
     const footer = document.createElement('div')

@@ -1,4 +1,5 @@
-import { MainTask, ProjectTitle, TaskContainer } from "./task"
+import { MainTask, PageTitleTask, ProjectTitle, TaskContainer } from "./task"
+import { AddProject, createNewTaskFrom } from "."
 
 export  function renderContent(){
     const mainContent = document.getElementById('content')
@@ -9,7 +10,7 @@ export  function renderContent(){
     return mainContent
 }
 
-function Main(){
+export function Main(){
     const main = document.createElement('div')
     main.classList.add('main')
 
@@ -17,7 +18,8 @@ function Main(){
     return main
 }
 
-function PageTitle(){
+
+export function PageTitle(){
     const projectTitle = document.createElement('div')
     projectTitle.classList.add('page-title')
 
@@ -61,17 +63,18 @@ export function CreateProjectDiv(userInputProjectTitleFromDataBase){
                 const mainContent = document.getElementById('content')
                 //wipe out the landing and display the tasks inside of it
                 mainContent.replaceChild(MainTask(),mainContent.children[1])
-                console.log(key);
+                //wipe out the original title and add the home button
+                mainContent.replaceChild(PageTitleTask(),mainContent.children[0])
 
                 const insideTheProject = document.querySelector('.inside-the--Project')
+                const taskDivContainer = document.querySelector('.task-div--container')
                 insideTheProject.insertBefore(ProjectTitle(key),insideTheProject.children[0])
                 for(let j=0;j<JSON.parse(value).length;j++){
                     let taskContent = JSON.parse(value)[j]
-                    console.log(JSON.parse(value)[j].taskTitle)
-                    insideTheProject.insertBefore(TaskContainer(taskContent.taskTitle,taskContent.duedate,taskContent.description),insideTheProject.children[1])
+                    taskDivContainer.insertBefore(TaskContainer(taskContent.taskTitle,taskContent.duedate,taskContent.description),taskDivContainer.children[0])
                 }
                 
-                break
+                break;
             }
 
         }
@@ -97,6 +100,12 @@ export function AddProjectDiv(){
 
     projectDiv.appendChild(projectTitle)
 
+    projectDiv.addEventListener('click',()=>{
+        const projectForm = document.querySelector('.project-title--form')
+        projectForm.style.display = 'block'
+
+    })
+
     return projectDiv
 }
 
@@ -121,7 +130,20 @@ function ProjectTitleForm(){
 
     const addProjectBtn = document.createElement('span')
     addProjectBtn.classList.add('add-project--btn')
-    addProjectBtn.textContent = 'Take Me in'
+    addProjectBtn.textContent = 'Add'
+
+    addProjectBtn.addEventListener('click',()=>{
+        const projectTitleInput = document.getElementById('project-title--input')
+        if(projectTitleInput.value === "") alert('Can\'t be empty')
+        else{
+            createNewTaskFrom(projectTitleInput.value.toLowerCase())
+
+            if(localStorage.length){
+                location.reload()
+                return
+            }  
+        }
+    })
 
     projectTitleForm.appendChild(coolHeader)
     projectTitleForm.appendChild(formData)
@@ -142,4 +164,6 @@ function Footer(){
 
     return footer
 }
+
+
 
