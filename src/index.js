@@ -47,16 +47,6 @@ class Project{
 
 
 
-    getProject(){
-        if(localStorage.length){
-            console.log(JSON.parse(localStorage.getItem(this.projectTitle)));
-            console.log(localStorage.length);
-        }else{
-            console.log('No item');
-        }
-     
-    }
-
     savetoLocalStorage(){
         localStorage.setItem(this.projectTitle,JSON.stringify(this.projects));
     }
@@ -127,20 +117,28 @@ export function createNewTaskFrom(projectTitle,taskTitle,taskDescription,dueDate
     
     if(taskTitle){
         const captainKim = localStorage.getItem(projectTitle)
-        console.log(captainKim);
         const newTask = new Task(taskTitle,taskDescription,dueDate)
 
         let retrievedTask = JSON.parse(captainKim)
         retrievedTask.push(newTask);
-        console.log(retrievedTask);
 
         localStorage.setItem(projectTitle,JSON.stringify(retrievedTask))
 
     }else{
         projectTitle = new AddProject(projectTitle)
-        projectTitle.createNewTask('sample task title','sample task description','sample due date')
+        projectTitle.createNewTask('What do you want to do taday ?','Good deeds goes a long way',getCurrentDate())
     }
 }
+function getCurrentDate() {
+    const today = new Date();
+    const day = today.getDate().toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, '0'); 
+    const year = today.getFullYear();
+  
+    return `${day}-${month}-${year}`;
+}
+  
+  
 
 
 

@@ -1,3 +1,4 @@
+import { longFormatters, sub } from 'date-fns'
 import { PopulateProjectContainer, createNewTaskFrom } from '.'
 import myImage from './addbtn.png'
 import { AddProjectDiv, CreateProjectDiv, Main, PageTitle } from './landing'
@@ -112,7 +113,6 @@ function flex(taskTitleinput,dueDateinput){
                     subTaskItem.classList.add('subtask-item')
                     subTaskItem.textContent = tasksFromTheLocalStorage[i].checkList[j]
 
-                    console.log(subTaskItem);
 
                     currentnavListUL.appendChild(subTaskItem)
                 }
@@ -134,48 +134,75 @@ function flex(taskTitleinput,dueDateinput){
     faPen.classList.add('fa-solid')
     faPen.classList.add('fa-pen')
     faPen.addEventListener('click',(e)=>{
+
         const inputForm = document.querySelector('.task-title--form')
         const title = document.getElementById('task-title-input')
         const description = document.getElementById('task-description-input')
         const dueDate = document.getElementById('myDate')
 
-        // title.value = "Mine"
-        // description.value = "desc"
-        // dueDate.value ="12/9/2024"
-
-        
         let target = e.target
         let currentTitle = target.parentElement.parentElement.parentElement.parentElement.parentElement.firstChild.firstChild.textContent
         let currentTaskTitle = target.parentElement.parentElement.firstChild.firstChild.textContent
+        let currentTaskTitleDiv = target.parentElement.parentElement.firstChild.firstChild
+        let currentDateDiv = target.parentElement.firstChild
+        let currentDescriptionDiv = target.parentElement.parentElement.parentElement.lastElementChild.firstChild
         let tasksFromTheLocalStorage = JSON.parse(localStorage.getItem(currentTitle))
 
-        // // console.log(tasksFromTheLocalStorage);
-        // console.log(currentTitle);
-        // console.log(currentTaskTitle);
 
+
+        //populate the form with the current values of the tast
         for(let i=0;i<tasksFromTheLocalStorage.length;i++){
             if(tasksFromTheLocalStorage[i].taskTitle === currentTaskTitle){
                 title.value = tasksFromTheLocalStorage[i].taskTitle
                 description.value = tasksFromTheLocalStorage[i].description
-                dueDate.value = tasksFromTheLocalStorage[i].dueDate
+                dueDate.value = tasksFromTheLocalStorage[i].duedate
                 inputForm.style.display = 'block'
                 break;
             }
         }
 
-        //submission
-        
-        const addTaskBtn = document.querySelector('.task-title--form')
-        const submitBtn = document.createElement('span')
-        submitBtn.classList.add('edit-task--btn')
-        submitBtn.textContent = "Confirm"
-        console.log(addTaskBtn);
-        addTaskBtn.replaceChild(submitBtn, document.querySelector('.add-new--task---btn'));
+        //create a button to submit the values to the starage
+        if(!document.querySelector('.edit-task--btn')){
+            const submitBtn = document.createElement('span')
+            submitBtn.classList.add('edit-task--btn')
+            submitBtn.textContent = "Confirm"
+            document.querySelector('.add-new--task---btn').style.display = 'none'
+            inputForm.appendChild(submitBtn)
 
-        submitBtn.addEventListener('click',()=>{
-            
-        })
-
+            submitBtn.addEventListener('click',()=>{
+                if(title.value === ""
+                || description.value === ""
+                || dueDate.value === ""){
+                    alert('cannot be empty')
+                    return
+                } 
+    
+                for(let i=0;i<tasksFromTheLocalStorage.length;i++){
+                    if(tasksFromTheLocalStorage[i].taskTitle === currentTaskTitle){
+    
+                        tasksFromTheLocalStorage[i].taskTitle = title.value
+                        tasksFromTheLocalStorage[i].description = description.value
+                        tasksFromTheLocalStorage[i].duedate = dueDate.value
+                        break;
+                    }
+                }
+    
+                currentTaskTitleDiv.textContent = title.value
+                currentDateDiv.textContent = dueDate.value
+                currentDescriptionDiv.textContent = description.value
+                localStorage.setItem(currentTitle,JSON.stringify(tasksFromTheLocalStorage))
+    
+    
+                title.value = ""
+                description.value = ""
+                dueDate.value =""
+                
+                document.querySelector('.add-new--task---btn').style.display = 'inline-block'
+                document.querySelector('.edit-task--btn').remove()
+                inputForm.style.display = 'none'
+    
+            })
+        }
 
     })
 
@@ -184,6 +211,24 @@ function flex(taskTitleinput,dueDateinput){
     faTrashCan.classList.add('fa-sharp')
     faTrashCan.classList.add('fa-solid')
     faTrashCan.classList.add('fa-trash-can')
+    faTrashCan.addEventListener('click',(e)=>{
+        let target = e.target
+        let currentTitle = target.parentElement.parentElement.parentElement.parentElement.parentElement.firstChild.firstChild.textContent
+        let currentTaskTitle = target.parentElement.parentElement.firstChild.firstChild.textContent
+        let currentTaskDiv = target.parentElement.parentElement.parentElement
+
+        let tasksFromTheLocalStorage = JSON.parse(localStorage.getItem(currentTitle))
+
+        for(let i=0;i<tasksFromTheLocalStorage.length;i++){
+            if(tasksFromTheLocalStorage[i].taskTitle === currentTaskTitle){
+                tasksFromTheLocalStorage.splice(i,1)
+                break;
+            }
+
+        }
+        currentTaskDiv.remove()
+        localStorage.setItem(currentTitle,JSON.stringify(tasksFromTheLocalStorage))
+    })
 
     const roundedCircle = document.createElement('div')
     roundedCircle.classList.add('rounded-circle')
@@ -295,7 +340,6 @@ function AddTaskDiv(){
             }
 
         }
-        // console.log(currentTaskItem);
     })
 
 
@@ -343,42 +387,8 @@ function TaskTitleForm(){
     addNewTaskBtn.classList.add('add-new--task---btn')
     addNewTaskBtn.textContent = 'Let\'s go!'
 
-    addNewTaskBtn.addEventListener('click',
-        // const taskTitleInputValue = document.getElementById('task-title-input')
-        // const taskDescriptionInputValue = document.getElementById('task-description-input')
-        // const taskDateInputValue = document.getElementById('myDate')
 
-        // if(taskTitleInputValue.value === ""
-        //     || taskDescriptionInputValue.value === ""
-        //     || taskDateInputValue.value === ""){
-        //         alert('cannot be empty')
-        //     } 
-        // else{
-        //     const currentprojectTitle = document.querySelector('.add-new--task---btn').parentElement.parentElement.firstChild.textContent.toLowerCase()
-        //     console.log(currentprojectTitle);
-        //     createNewTaskFrom(currentprojectTitle,taskTitleInputValue.value,taskDescriptionInputValue.value,taskDateInputValue.value)
-
-
-        //     const projectFromLocalStorage = localStorage.getItem(currentprojectTitle)
-
-        //     const insideTheProject = document.querySelector('.task-div--container')
-        //     let taskContent = JSON.parse(projectFromLocalStorage)[JSON.parse(projectFromLocalStorage).length-1]
-    
-        //     insideTheProject.appendChild(TaskContainer(taskContent.taskTitle,taskContent.duedate,taskContent.description))
-        
-
-        //     taskTitleInputValue.value = ""
-        //     taskDescriptionInputValue.value = ""
-        //     taskDateInputValue.value = ""
-
-        //     taskTitleForm.style.display = 'none'
-
-        // }
-        addNewTaskBTNEvent
-    )
-
-
-    function addNewTaskBTNEvent(){
+    addNewTaskBtn.addEventListener('click',()=>{
         const taskTitleInputValue = document.getElementById('task-title-input')
         const taskDescriptionInputValue = document.getElementById('task-description-input')
         const taskDateInputValue = document.getElementById('myDate')
@@ -390,7 +400,6 @@ function TaskTitleForm(){
             } 
         else{
             const currentprojectTitle = document.querySelector('.add-new--task---btn').parentElement.parentElement.firstChild.textContent.toLowerCase()
-            console.log(currentprojectTitle);
             createNewTaskFrom(currentprojectTitle,taskTitleInputValue.value,taskDescriptionInputValue.value,taskDateInputValue.value)
 
 
@@ -409,7 +418,7 @@ function TaskTitleForm(){
             taskTitleForm.style.display = 'none'
 
         }
-    }
+    })
 
     taskTitleForm.appendChild(coolHeader)
     taskTitleForm.appendChild(taskLabel)
@@ -421,6 +430,41 @@ function TaskTitleForm(){
     taskTitleForm.appendChild(addNewTaskBtn)
 
     return taskTitleForm
+}
+
+function addNewTaskBTNEvent(){
+    if(document.querySelector('.edit-task--btn')){
+        document.querySelector('.edit-task--btn').style.display = 'none'
+    }
+    const taskTitleInputValue = document.getElementById('task-title-input')
+    const taskDescriptionInputValue = document.getElementById('task-description-input')
+    const taskDateInputValue = document.getElementById('myDate')
+
+    if(taskTitleInputValue.value === ""
+        || taskDescriptionInputValue.value === ""
+        || taskDateInputValue.value === ""){
+            alert('cannot be empty')
+        } 
+    else{
+        const currentprojectTitle = document.querySelector('.add-new--task---btn').parentElement.parentElement.firstChild.textContent.toLowerCase()
+        createNewTaskFrom(currentprojectTitle,taskTitleInputValue.value,taskDescriptionInputValue.value,taskDateInputValue.value)
+
+
+        const projectFromLocalStorage = localStorage.getItem(currentprojectTitle)
+
+        const insideTheProject = document.querySelector('.task-div--container')
+        let taskContent = JSON.parse(projectFromLocalStorage)[JSON.parse(projectFromLocalStorage).length-1]
+
+        insideTheProject.appendChild(TaskContainer(taskContent.taskTitle,taskContent.duedate,taskContent.description))
+    
+
+        taskTitleInputValue.value = ""
+        taskDescriptionInputValue.value = ""
+        taskDateInputValue.value = ""
+
+        taskTitleForm.style.display = 'none'
+
+    }
 }
 
 function AddTaskBtn(){

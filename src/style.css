@@ -343,3 +343,6 @@ body{
     cursor: pointer;
 }
 
+.displayNoneClass{
+    display: none;
+}
