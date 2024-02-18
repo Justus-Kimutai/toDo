@@ -126,7 +126,7 @@ export function createNewTaskFrom(projectTitle,taskTitle,taskDescription,dueDate
 
     }else{
         projectTitle = new AddProject(projectTitle)
-        projectTitle.createNewTask('What do you want to do taday ?','Good deeds goes a long way',getCurrentDate())
+        projectTitle.createNewTask('What do you want to do today ?','Good deeds goes a long way',getCurrentDate())
     }
 }
 function getCurrentDate() {
