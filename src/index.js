@@ -46,7 +46,6 @@ class Project{
     }
 
 
-
     savetoLocalStorage(){
         localStorage.setItem(this.projectTitle,JSON.stringify(this.projects));
     }
@@ -129,6 +128,7 @@ export function createNewTaskFrom(projectTitle,taskTitle,taskDescription,dueDate
         projectTitle.createNewTask('What do you want to do today ?','Good deeds goes a long way',getCurrentDate())
     }
 }
+
 function getCurrentDate() {
     const today = new Date();
     const day = today.getDate().toString().padStart(2, '0');
@@ -138,7 +138,3 @@ function getCurrentDate() {
     return `${day}-${month}-${year}`;
 }
   
-  
-
-
-
